@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Payslip Generator</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container-1">
+        <h1>Payslip Generator</h1>
+        <hr>
+        <h2 class="sh-1">Employee Pay Summary</h2>
+        <form id="payslip-form">
+            <label>Employee Name:</label>
+            <input type="text" id="employee_name" name="employee_name" required>
+            
+            <label>Employee ID:</label>
+            <input type="text" id="employee_id" name="employee_id" required>
+            
+            <label>Pay Period:</label>
+            <input type="month" id="pay_period" name="pay_period" required>
+            
+            <label>Paid Days:</label>
+            <input type="number" id="paid_days" name="paid_days" min="0" max="31" required>
+
+            <label>Loss Of Pay Days:</label>
+            <input type="number" id="lop_days" name="lop_days" min="0" max="31" required>
+
+            <label>Pay Date:</label>
+            <input type="date" id="pay_date" name="pay_date" required>
+            
+            <br>
+
+            <div class="income-details-header">
+                <h2 class="sh-1">Income Details</h2>
+            </div>
+            <div class="income-details">
+                <div class="container-2">
+                    <div class="row">
+                        <div class="col-6">
+                            <table class="table table-bordered" id="earnings-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="text-align: left;">Earnings</th>
+                                        <th scope="col" style="text-align: right;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="earningsrow">
+                                    <tr class="earning-row">
+                                        <td>Basic Pay</td>
+                                        <td><input type="number" class="earning-amount basic form-control" oninput="updateEarnings()"></td>
+                                    </tr>
+                                    <tr class="earning-row">
+                                        <td>HRA</td>
+                                        <td><input type="number" class="earning-amount hra form-control" oninput="updateEarnings()"></td>
+                                    </tr>
+                                    <tr class="earning-row">
+                                        <td>Incentive</td>
+                                        <td><input type="number" class="earning-amount incentive form-control" oninput="updateEarnings()"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div>
+                                <label for="totalEarnings">Total Earnings</label>
+                                <input type="text" class="form-control" id="totalEarnings" disabled readonly>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <table class="table table-bordered" id="deduction-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="text-align: left;">Deductions</th>
+                                        <th scope="col" style="text-align: right;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="deductionrow">
+                                    <tr class="deduction-row">
+                                        <td>Income Tax</td>
+                                        <td><input type="number" class="deduction-amount form-control" oninput="updateDeductions()"></td>
+                                    </tr>
+                                    <tr class="deduction-row">
+                                        <td>Provident Fund</td>
+                                        <td><input type="number" class="deduction-amount form-control" oninput="updateDeductions()"></td>
+                                    </tr>
+                                    <tr class="deduction-row">
+                                        <td>Unpaid Leaves</td>
+                                        <td><input type="number" class="deduction-amount form-control" oninput="updateDeductions()"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div>
+                                <label for="totalDeductions">Total Deductions</label>
+                                <input type="text" class="form-control" id="totalDeductions" disabled readonly>
+                            </div>
+                        </div>
+
+                        <div class="total-net-pay pt-6 d-flex justify-content-between">
+                            <div>
+                                <h3 class="d-flex net-payble">
+                                    Net Payable <strong class="mx-2 net-amount-print">:</strong> <strong class="d-none" id="currency-wrapper-print"></strong> <strong class="ml-1 d-none" id="total-net-pay-print">0</strong>
+                                </h3>
+                                <p id="formula">Gross Earnings - Total Deductions</p>
+                                <div class="form-group col-md-6">
+                                    <label for="totalAmount">Total Amount</label>
+                                    <input type="text" class="form-control" id="totalAmount" disabled readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="but" type="submit" onclick="makePDF()">Generate Payslip</button>
+        </form>
+        <div id="payslip-result"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js" integrity="sha512-nnzkI2u2Dy6HMnzMIkh7CPd1KX445z38XIu4jG1jGw7x5tSL3VBjE44dY4ihMU1ijAQV930SPM12cCFrB18sVw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.slim.min.js" integrity="sha512-sNylduh9fqpYUK5OYXWcBleGzbZInWj8yCJAU57r1dpSK9tP2ghf/SRYCMj+KsslFkCOt3TvJrX2AV/Gc3wOqA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" referrerpolicy="no-referrer"></script>
+</body>
+</html>
+
+
